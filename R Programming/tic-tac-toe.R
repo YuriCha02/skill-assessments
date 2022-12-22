@@ -66,76 +66,85 @@ check_winner <- function() {
 # This will used to show how many turn has passed.
 turn <- 0
 
-# This is the player's movement
-player_movement <- function() {
-  while (is.null(winner)) {
-    # Acquiring where the player wants to move.
-    cat("\nPlayer's turn\n")
-    player_select_row <- readline("Choose the row: ")
-    player_select_row_int <- as.integer(substr(player_select_row, 1, 1))
-    player_select_col <- readline("choose the column: ")
-    player_select_col_int <- as.integer(substr(player_select_col, 1, 1))
-    player_mark <<- environment[player_select_row_int, player_select_col_int]
-
-    # Checking if the next spot is already marked by player or computer
-    if (!is.null(player_mark) && !is.na(player_mark)) {
-      if (player_mark != "X" & player_mark != "O") {
-        # If the spot isn't taken yet, replace the spot
-        environment[player_select_row_int, player_select_col_int] <<- player_shape
-
-        # Display the change and let computer make movement
-        print(environment)
-        turn <<- turn + 1
-        try(check_winner())
-        computer_movement()
-      } else {
-        cat("\nIllegal movement!\nDo it again \n")
-        player_movement()
-      }
+#This is player's movement
+player_move <- function() {
+  row0.5 <- "stdin"
+  cat("\nChoose the row: ")
+  row <- readLines(con = row0.5, n = 1)
+  row_int <- as.integer(row)
+  col0.5 <- "stdin"
+  cat("Choose the col: ")
+  col <- readLines(con = col0.5, n = 1)
+  col_int <- as.integer(col)
+  player_mark <- environment[row_int, col_int]
+  if(!is.null(player_mark) && !is.na(player_mark)) {
+    if(player_mark != "X" & player_mark != "O") {
+    environment[row_int, col_int] <<- player_shape
+    cat("\n////////////////\n")
+    print(environment)
+    cat("////////////////\n")
+    turn <<- turn + 1
+    try(check_winner())
+    computer_move()
     } else {
       cat("\nIllegal movement!\nDo it again \n")
-      player_movement()
+      player_move()
     }
-  }
+  } else {
+    cat("\nIllegal movement!\nDo it again \n")
+    player_move()
+  } 
 }
 
 # This is computer's movement
-computer_movement <- function() {
+computer_move <- function() {
   while (is.null(winner)) {
-    cat("\nComputer's movement \n")
+    cat("\n")
+    cat("Computer's movement \n")
     # Find unoccupied spot for computer
     empty_spot <<- which(environment != "X" & environment != "O")
-
+    
     # replace the empty spot
     environment[environment == sample(empty_spot, 1)] <<- computer_shape
+    cat("\n////////////////\n")
     print(environment)
+    cat("////////////////\n")
     turn <<- turn + 1
     try(check_winner())
-    player_movement()
+    player_move()
   }
 }
 
-# This will change the player's shape depending on who's going first.
-firstorsecond <- function() {
-  Answer <- readline("Would you like to go first or second? \nType 1 if you like to go first or type 2 if you prefer to go second.\n")
-  if (substr(Answer, 1, 1) == "1") {
+#Ask if player wants to go first or second
+Start_game <- function() {
+  if (interactive()) {
+    con <- stdin()
+  } else {
+    con <- "stdin"
+  }
+  #Ask if player wants to go first or second
+  cat("Would you like to go first or second? \nType 1 if you like to go first or type 2 if you prefer to go second.\n")
+  firstorsecond <- readLines(con = con, n = 1)
+  if (firstorsecond == 1) {
     player_shape <<- "X"
     computer_shape <<- "O"
-    cat("You're going first \nYou're shape is X\n")
+    cat("\nYou're going first \nYou're shape is X")
+    cat("\n////////////////\n")
     print(environment)
-    player_movement()
-  } else if (substr(Answer, 1, 1) == "2") {
+    cat("////////////////\n")
+    player_move()
+  } else if (firstorsecond == 2) {
     player_shape <<- "O"
     computer_shape <<- "X"
-    cat("You're going second \nYou're shape is O\n")
+    cat("\nYou're going second \nYou're shape is O\n")
     print(environment)
-    computer_movement()
+    computer_move()
   } else {
-    NULL
-    cat("Do it again\n")
-    firstorsecond()
+    cat("Can't recognize your input.\nType 1 or 2\n")
+    cat("///////////////////////////////////////\n")
+    Start_game()
   }
 }
 
-# Start the game
-if (interactive()) firstorsecond()
+#Start Game
+Start_game()
