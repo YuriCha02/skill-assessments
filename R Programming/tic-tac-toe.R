@@ -100,7 +100,7 @@ player_move <- function() {
 computer_move <- function() {
   while (is.null(winner)) {
     cat("\n")
-    cat("Computer's movement \n")
+    cat("Computer's move \n")
     # Find unoccupied spot for computer
     empty_spot <<- which(environment != "X" & environment != "O")
     
@@ -129,6 +129,7 @@ Start_game <- function() {
     player_shape <<- "X"
     computer_shape <<- "O"
     cat("\nYou're going first \nYou're shape is X")
+    cat("\n")
     cat("\n////////////////\n")
     print(environment)
     cat("////////////////\n")
