@@ -6,7 +6,7 @@ row.names(environment) <- c("[1]", "[2]", "[3]")
 # This will default the winner
 winner <- 0
 
-#This is defualt turn
+# This is defualt turn
 turn <- 0
 
 # This will evaluate if the victory condition is met
@@ -108,8 +108,8 @@ computer_move <- function(player_shape, computer_shape) {
       environment[environment == sample(empty_spot, 1)] <<- computer_shape
       turn <<- turn + 1
     } else {
-        environment[environment == empty_spot] <- computer_shape
-        turn <<- turn + 1
+      environment[environment == empty_spot] <- computer_shape
+      turn <<- turn + 1
     }
     display(environment)
     try(check_winner(computer_shape))
