@@ -8,7 +8,7 @@ row.names(environment) <- c("[1]", "[2]", "[3]")
 # This is defualt turn
 turn <- 0
 
-# This will evaluate if the victory condition is met except for tie condition.
+# This will evaluate if the victory condition is met.
 check_winner <- function(X) {
   environment <- as.matrix(environment)
   
@@ -37,6 +37,7 @@ check_winner <- function(X) {
     winner <- 1
   }
   
+  # Check if it's tie
   else if (turn == 9 & winner == 0) {
     winner <- 2
   }
