@@ -32,7 +32,6 @@ check_winner <- function(X) {
     winner <- 1
   }
 
-  # check if it's tie
   # Check for tie
   occupied_spaces <- sum(environment == "X" | environment == "O")
   if (occupied_spaces == nrow(environment) * ncol(environment) && winner == 0) {
