@@ -3,43 +3,44 @@ environment <- data.frame(c(1, 2, 3), c(4, 5, 6), c(7, 8, 9))
 colnames(environment) <- c("[1]", "[2]", "[3]")
 row.names(environment) <- c("[1]", "[2]", "[3]")
 
-# This will default the winner
-winner <- 0
+
 
 # This is defualt turn
 turn <- 0
 
-# This will evaluate if the victory condition is met
+# This will evaluate if the victory condition is met except for tie condition.
 check_winner <- function(X) {
   environment <- as.matrix(environment)
+  
+  # This is default value for the winner
+  winner <- 0
   # Check rows
   for (i in 1:nrow(environment)) {
     if (all(environment[i, ] == X)) {
       winner <- 1
     }
   }
-
+  
   # Check columns
   for (i in 1:ncol(environment)) {
     if (all(environment[, i] == X)) {
       winner <- 1
     }
   }
-
+  
   # Check diagonals
   if (all(diag(environment) == X)) {
     winner <- 1
   }
-
-  if (all(diag(t(environment)) == X)) {
+  
+  if (environment[3, 1] == X & environment[2, 2] == X & environment[1, 3] == X) {
     winner <- 1
   }
-
-  # Check if it's tie
-  if (turn == 9) {
+  
+  else if (turn == 9 & winner == 0) {
     winner <- 2
   }
-
+  
   return(winner)
 }
 
@@ -59,7 +60,6 @@ stop_quietly <- function() {
 
 # This is player's movement
 player_move <- function(player_shape, computer_shape) {
-  while (winner == 0) {
     row0.5 <- "stdin"
     cat("\nChoose the row: ")
     row <- readLines(con = row0.5, n = 1)
@@ -74,8 +74,6 @@ player_move <- function(player_shape, computer_shape) {
         environment[row_int, col_int] <<- player_shape
         turn <<- turn + 1
         display(environment)
-        try(check_winner(player_shape))
-
         if (check_winner(player_shape) == 1) {
           cat("You won!\n")
           stop_quietly()
@@ -93,12 +91,10 @@ player_move <- function(player_shape, computer_shape) {
       cat("\nIllegal movement!\nDo it again \n")
       player_move(player_shape, computer_shape)
     }
-  }
 }
 
 # This is computer's movement
 computer_move <- function(player_shape, computer_shape) {
-  while (winner == 0) {
     cat("\n")
     cat("Computer's move \n")
     # Find unoccupied spot for computer
@@ -112,8 +108,6 @@ computer_move <- function(player_shape, computer_shape) {
       turn <<- turn + 1
     }
     display(environment)
-    try(check_winner(computer_shape))
-
     if (check_winner(computer_shape) == 1) {
       cat("You lost\n")
       stop_quietly()
@@ -123,7 +117,6 @@ computer_move <- function(player_shape, computer_shape) {
     } else {
       player_move(player_shape, computer_shape)
     }
-  }
 }
 
 # Ask if player wants to go first or second
