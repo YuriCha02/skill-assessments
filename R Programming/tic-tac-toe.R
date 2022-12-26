@@ -3,9 +3,6 @@ environment <- data.frame(c(1, 2, 3), c(4, 5, 6), c(7, 8, 9))
 colnames(environment) <- c("[1]", "[2]", "[3]")
 row.names(environment) <- c("[1]", "[2]", "[3]")
 
-# This is default turn
-turn <- 0
-
 # This will evaluate if the victory condition is met
 check_winner <- function(X) {
   environment <- as.matrix(environment)
@@ -36,7 +33,9 @@ check_winner <- function(X) {
   }
 
   # check if it's tie
-  else if (turn == 9 && winner == 0) {
+  # Check for tie
+  occupied_spaces <- sum(environment == "X" | environment == "O")
+  if (occupied_spaces == nrow(environment) * ncol(environment) && winner == 0) {
     winner <- 2
   }
 
@@ -71,7 +70,6 @@ player_move <- function(player_shape, computer_shape) {
   if (!is.null(player_mark) && !is.na(player_mark)) {
     if (player_mark != "X" & player_mark != "O") {
       environment[row_int, col_int] <<- player_shape
-      turn <<- turn + 1
       display(environment)
       if (check_winner(player_shape) == 1) {
         cat("You won!\n")
@@ -101,10 +99,8 @@ computer_move <- function(player_shape, computer_shape) {
   # replace the empty spot
   if (length(empty_spot) != 1) {
     environment[environment == sample(empty_spot, 1)] <<- computer_shape
-    turn <<- turn + 1
   } else {
-    environment[environment == empty_spot] <- computer_shape
-    turn <<- turn + 1
+    environment[environment == empty_spot] <<- computer_shape
   }
   display(environment)
   if (check_winner(computer_shape) == 1) {
@@ -135,8 +131,8 @@ Start_game <- function() {
     display(environment)
     player_move(player_shape, computer_shape)
   } else if (firstorsecond == 2) {
-    player_shape <<- "O"
-    computer_shape <<- "X"
+    player_shape <- "O"
+    computer_shape <- "X"
     cat("\nYou're going second \nYou're shape is O\n")
     display(environment)
     computer_move(player_shape, computer_shape)
